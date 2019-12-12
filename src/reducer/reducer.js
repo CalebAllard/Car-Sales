@@ -1,4 +1,4 @@
-export const initialState = {
+const initialState = {
     additionalPrice: 0,
     car: {
       price: 26395,
@@ -16,31 +16,43 @@ export const initialState = {
 }
 
 export const reducer = (state = initialState, action) => {
-    console.log(state, action);
+    // console.log(state, action);
 
     switch (action.type){
         case 'ADD_FEATURE':{
-            
-            state.additionalFeatures.map(item => {
-                if(item.id === action.payload){
-                    let newItem = item;
-                    console.log(newItem);
-                    return {
-                        ...state,
-                        car: { ...state.car,
-                            features:[...state.car.features, newItem]
+                       
+                return {
+                    ...state,
+                    car: { ...state.car,
+                        features: [...state.car.features, action.payload]
+                    },
+                    additionalFeatures: state.additionalFeatures.filter(item => {
+                        if(item !== action.payload){
+                        return item 
                         }
-                    }
+                    }),
+                    additionalPrice: state.additionalPrice += action.payload.price
                 }
-            })
             
-            // return {
-            //     ...state,
-            //     car: features.push(newItem)
-            // };
+            
 
-        }
-        
+        };
+        case 'REMOVE_FEATURE':{
+            console.log(action.payload)
+            return {
+                ...state,
+                additionalFeatures: [...state.additionalFeatures, action.payload],
+                car: { ...state.car,
+                    features: state.car.features.filter(item => {
+                        if(item !== action.payload){
+                            return item
+                        }
+                    }),
+                    additionalPrice: state.additionalPrice -= action.payload.price
+                }
+                
+            }
+        };
         
         default: 
             return state;
